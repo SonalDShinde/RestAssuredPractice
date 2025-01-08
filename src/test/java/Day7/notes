@@ -1,0 +1,129 @@
+Authentication 
+-basically check whether user is valid or not / valid credential or not
+Authorization
+-User is valid but it check access privileges / Permissions
+-Like only Authenticate user have Authorization
+
+
+In RestAssured We have following Authentication
+
+## Basic ----> Provide UserName , Password
+
+given()
+	.auth().basic("admin","admin123")
+.when()
+	.get("Authentiction url fron postMan")
+.then()
+	.statuscode(200)
+	.body("authenticated",equalsTo(true))	 //Request Body Verification 
+	.log().all();
+
+## Digest ----> UserName Password
+
+given()
+	.auth().digest("admin","admin123")
+.when()
+	.get("Authentiction url fron postMan")
+.then()
+	.statuscode(200)
+	.body("authenticated",equalsTo(true))	 //Request Body Verification 
+	.log().all();
+	
+## Preemptive ----> UserName Password
+
+given()
+	.auth().preemptive().basic("admin","admin123")
+.when()
+	.get("Authentiction url fron postMan")
+.then()
+	.statuscode(200)
+	.body("authenticated",equalsTo(true))	 //Request Body Verification 
+	.log().all();
+	
+	
+	
+##  Bearer Token 
+
+void bareerToken() {
+		
+	
+		String token = "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";
+		
+//		given()
+//			.header("Authorization","Bearer"+token)
+//		.when()
+//			.get("https://github.com/SonalDShinde")
+//		.then()
+//			.statusCode(200)
+//			.log().all();
+		
+		RestAssured.baseURI="https://github.com/SonalDShinde";
+		RestAssured
+			.given()
+				.header("Authorization","Bearer"+token)
+			.when()
+				.get()
+			.then()
+				.statusCode(200)
+				.log().all();
+				
+			
+	}
+	
+##  oAuth 1.0,2.0
+
+void oAuth1(){
+		
+		String consumerKey=""; 
+		//etc
+		
+		
+		
+		given()
+			.auth().oauth("consumerKey", "consumerSecret", "accessToken", "tokenSecret")
+		.when()
+			.get("url")
+		.then()
+			.statusCode(200)
+			.log().all();
+		
+			}
+	
+	//@Test
+	void oAuth2() {
+		
+		given()
+			.auth().oauth2("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")
+		.when()
+			.get("https://github.com/SonalDShinde")
+		.then()
+			.statusCode(200)
+			.log().all();
+		
+	}
+
+##  API Key
+
+		Method 1
+		given()
+			.queryParams("appid", "31443f392f50c35034f856093d55dc9b")
+			
+		.when()
+			.get("https://api.openweathermap.org/data/2.5/forecast?q=Delhi")
+			
+		.then()
+			.statusCode(200)
+			.log().all();
+		
+		//Method 2
+		
+		given()
+			.queryParam("appid", "31443f392f50c35034f856093d55dc9b")
+			.pathParam("path", "data/2.5/forecast")
+			.queryParams("q", "Delhi")
+		.when()
+			.get("https://api.openweathermap.org/{path}")
+		.then()
+			.statusCode(200)
+			.log().all();
+		
